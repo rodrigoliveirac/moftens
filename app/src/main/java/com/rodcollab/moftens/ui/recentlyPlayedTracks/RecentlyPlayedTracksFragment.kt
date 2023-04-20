@@ -13,7 +13,9 @@ import com.rodcollab.moftens.R
 import com.rodcollab.moftens.data.service.song.SongServiceImpl
 import com.rodcollab.moftens.databinding.FragmentHomeBinding
 import com.rodcollab.moftens.domain.GetRecentlyPlayedTracksUseCaseImpl
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RecentlyPlayedTracksFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
