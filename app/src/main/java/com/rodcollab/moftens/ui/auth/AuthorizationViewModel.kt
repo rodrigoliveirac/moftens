@@ -28,20 +28,6 @@ class AuthorizationViewModel @Inject constructor(
 
     data class UserInformationStatusState(val hasUser: Boolean)
 
-    fun waitForUserInfo() {
-        viewModelScope.launch {
-            userService.get { user ->
-                if (user != null) {
-                    val id = user.id
-                    sharedPrefs.saveUserInformation(id)
-                    hasUser.postValue(UserInformationStatusState(true))
-                } else {
-                    Log.d("ERROR", "SOMETHING IS WRONG")
-                }
-            }
-        }
-    }
-
     fun saveAuthToken(accessToken: String?) {
         viewModelScope.launch {
             sharedPrefs.saveAuthToken(accessToken.toString())
@@ -49,7 +35,7 @@ class AuthorizationViewModel @Inject constructor(
             userService.get() { user ->
                 if (user != null) {
                     val id = user.id
-                    sharedPrefs.saveUserInformation(id).commit()
+                    sharedPrefs.saveUserInformation(id)
                     hasUser.postValue(UserInformationStatusState(true))
                 } else {
                     Log.d("ERROR", "SOMETHING IS WRONG")

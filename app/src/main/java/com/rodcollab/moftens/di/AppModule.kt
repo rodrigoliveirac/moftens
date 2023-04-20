@@ -2,7 +2,7 @@ package com.rodcollab.moftens.di
 
 import android.app.Application
 import android.content.SharedPreferences
-import com.rodcollab.moftens.Constants.SPOTIFY_PREFS
+import com.rodcollab.moftens.util.Constants.SPOTIFY_PREFS
 import com.rodcollab.moftens.data.DefaultPreferences
 import com.rodcollab.moftens.data.Preferences
 import dagger.Module
@@ -24,6 +24,6 @@ object AppModule {
     @Provides
     @Singleton
     fun providesPreferences(sharedPreferences: SharedPreferences): Preferences {
-        return DefaultPreferences(sharedPreferences)
+        return DefaultPreferences(sharedPreferences, sharedPreferences.edit())
     }
 }

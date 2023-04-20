@@ -4,12 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.rodcollab.moftens.Constants.CLIENT_ID
-import com.rodcollab.moftens.Constants.REDIRECT_URI
-import com.rodcollab.moftens.Constants.REQUEST_CODE
-import com.rodcollab.moftens.Constants.SCOPES
+import com.rodcollab.moftens.BuildConfig
 import com.rodcollab.moftens.MainActivity
 import com.rodcollab.moftens.databinding.ActivityAuthorizationBinding
+import com.rodcollab.moftens.util.Constants.REQUEST_CODE
+import com.rodcollab.moftens.util.Constants.SCOPES
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
@@ -38,8 +37,8 @@ class AuthorizationActivity : AppCompatActivity() {
     private fun authenticateSpotify() {
         val builder =
             AuthorizationRequest.Builder(
-                CLIENT_ID, AuthorizationResponse.Type.TOKEN,
-               REDIRECT_URI
+                BuildConfig.CLIENT_ID, AuthorizationResponse.Type.TOKEN,
+               BuildConfig.REDIRECT_URI
             )
         builder.setScopes(arrayOf<String>(SCOPES))
         val request = builder.build()
@@ -82,10 +81,5 @@ class AuthorizationActivity : AppCompatActivity() {
     private fun startMainActivity() {
         val newIntent = Intent(this, MainActivity::class.java)
         startActivity(newIntent)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.waitForUserInfo()
     }
 }
