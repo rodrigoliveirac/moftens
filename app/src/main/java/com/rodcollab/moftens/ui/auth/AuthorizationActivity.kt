@@ -13,8 +13,6 @@ import com.rodcollab.moftens.Constants.REQUEST_CODE
 import com.rodcollab.moftens.Constants.SCOPES
 import com.rodcollab.moftens.Constants.SPOTIFY_PREFS
 import com.rodcollab.moftens.MainActivity
-import com.rodcollab.moftens.data.DefaultPreferences
-import com.rodcollab.moftens.data.Preferences
 import com.rodcollab.moftens.data.service.user.UserServiceImpl
 import com.rodcollab.moftens.databinding.ActivityAuthorizationBinding
 import com.spotify.sdk.android.auth.AuthorizationClient
@@ -25,9 +23,8 @@ class AuthorizationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthorizationBinding
 
+    private var editor: SharedPreferences.Editor? = null
     private var mSharedPreferences: SharedPreferences? = null
-
-    private lateinit var sharedPrefs: Preferences
 
     private var queue: RequestQueue? = null
 
@@ -36,12 +33,10 @@ class AuthorizationActivity : AppCompatActivity() {
         binding = ActivityAuthorizationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedPrefs = DefaultPreferences(getSharedPreferences(SPOTIFY_PREFS, 0))
-
         binding.button.setOnClickListener {
             authenticateSpotify()
             mSharedPreferences = getSharedPreferences(SPOTIFY_PREFS, 0)
-            queue = Volley.newRequestQueue(this);
+            queue = Volley.newRequestQueue(this)
         }
 
     }
@@ -67,7 +62,10 @@ class AuthorizationActivity : AppCompatActivity() {
                 AuthorizationClient.getResponse(resultCode, intent)
             when (response.type) {
                 AuthorizationResponse.Type.TOKEN -> {
-                    getAuthToken(response)
+                    editor = getSharedPreferences(SPOTIFY_PREFS, 0).edit()
+                    editor!!.putString("token", response.accessToken)
+                    Log.d("STARTING", "GOT AUTH TOKEN")
+                    editor!!.apply()
                     waitForUserInfo()
                 }
                 AuthorizationResponse.Type.ERROR -> {
@@ -78,9 +76,6 @@ class AuthorizationActivity : AppCompatActivity() {
         }
     }
 
-    private fun getAuthToken(response: AuthorizationResponse) {
-        sharedPrefs.getAuthToken(response.accessToken)
-    }
 
     private fun waitForUserInfo() {
         val userService = UserServiceImpl(queue!!, mSharedPreferences!!)
@@ -88,7 +83,11 @@ class AuthorizationActivity : AppCompatActivity() {
             if (user != null) {
 
                 val id = userService.user?.id
-                sharedPrefs.getUserInformation(id)
+                editor = getSharedPreferences(SPOTIFY_PREFS, 0).edit()
+                editor!!.putString("userid", id)
+                Log.d("STARTING", "GOT USER INFORMATION")
+                // We use commit instead of apply because we need the information stored immediately
+                editor!!.commit()
                 startMainActivity()
             } else {
                 Log.d("ERROR", "SOMETHING IS WRONG")
