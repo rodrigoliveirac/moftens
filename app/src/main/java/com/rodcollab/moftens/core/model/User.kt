@@ -1,4 +1,4 @@
-package com.rodcollab.moftens.data.model
+package com.rodcollab.moftens.core.model
 
 data class User(
     val id: String,

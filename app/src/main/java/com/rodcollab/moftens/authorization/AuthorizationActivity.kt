@@ -1,47 +1,36 @@
-package com.rodcollab.moftens.ui.auth
+package com.rodcollab.moftens.authorization
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.Volley
-import com.rodcollab.moftens.Constants.CLIENT_ID
-import com.rodcollab.moftens.Constants.REDIRECT_URI
-import com.rodcollab.moftens.Constants.REQUEST_CODE
-import com.rodcollab.moftens.Constants.SCOPES
-import com.rodcollab.moftens.Constants.SPOTIFY_PREFS
-import com.rodcollab.moftens.MainActivity
-import com.rodcollab.moftens.data.DefaultPreferences
-import com.rodcollab.moftens.data.Preferences
-import com.rodcollab.moftens.data.service.user.UserServiceImpl
+import androidx.lifecycle.ViewModelProvider
+import com.rodcollab.moftens.BuildConfig
+import com.rodcollab.moftens.player.recentlyPlayedTracks.ui.MainActivity
 import com.rodcollab.moftens.databinding.ActivityAuthorizationBinding
+import com.rodcollab.moftens.core.util.Constants.REQUEST_CODE
+import com.rodcollab.moftens.core.util.Constants.SCOPES
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AuthorizationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthorizationBinding
 
-    private var mSharedPreferences: SharedPreferences? = null
-
-    private lateinit var sharedPrefs: Preferences
-
-    private var queue: RequestQueue? = null
+    private lateinit var viewModel: AuthorizationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthorizationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedPrefs = DefaultPreferences(getSharedPreferences(SPOTIFY_PREFS, 0))
+        viewModel = ViewModelProvider(this)[AuthorizationViewModel::class.java]
 
         binding.button.setOnClickListener {
             authenticateSpotify()
-            mSharedPreferences = getSharedPreferences(SPOTIFY_PREFS, 0)
-            queue = Volley.newRequestQueue(this);
         }
 
     }
@@ -49,11 +38,13 @@ class AuthorizationActivity : AppCompatActivity() {
     private fun authenticateSpotify() {
         val builder =
             AuthorizationRequest.Builder(
-                CLIENT_ID, AuthorizationResponse.Type.TOKEN,
-               REDIRECT_URI
+                BuildConfig.CLIENT_ID, AuthorizationResponse.Type.TOKEN,
+                BuildConfig.REDIRECT_URI
             )
         builder.setScopes(arrayOf<String>(SCOPES))
         val request = builder.build()
+        binding.button.visibility = View.GONE
+        binding.contentLoadingProgressBar.show()
         AuthorizationClient.openLoginActivity(this, REQUEST_CODE, request)
     }
 
@@ -79,19 +70,14 @@ class AuthorizationActivity : AppCompatActivity() {
     }
 
     private fun getAuthToken(response: AuthorizationResponse) {
-        sharedPrefs.getAuthToken(response.accessToken)
+        viewModel.saveAuthToken(response.accessToken)
     }
 
     private fun waitForUserInfo() {
-        val userService = UserServiceImpl(queue!!, mSharedPreferences!!)
-        userService.get() {user ->
-            if (user != null) {
-
-                val id = userService.user?.id
-                sharedPrefs.getUserInformation(id)
+        viewModel.hasUser().observe(this) { hasUserState ->
+            if (hasUserState.hasUser) {
                 startMainActivity()
-            } else {
-                Log.d("ERROR", "SOMETHING IS WRONG")
+                binding.contentLoadingProgressBar.hide()
             }
         }
     }

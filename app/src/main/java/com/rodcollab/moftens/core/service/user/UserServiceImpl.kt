@@ -1,21 +1,23 @@
-package com.rodcollab.moftens.data.service.user
+package com.rodcollab.moftens.core.service.user
 
-import android.content.SharedPreferences
 import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.gson.Gson
-import com.rodcollab.moftens.data.model.User
+import com.rodcollab.moftens.core.prefs.Preferences
+import com.rodcollab.moftens.core.model.User
+import javax.inject.Inject
 
 
-class UserServiceImpl(
-    private val mQueue: RequestQueue,
-    private val mSharedPreferences: SharedPreferences
-) {
+class UserServiceImpl @Inject constructor(
+    private val queue: RequestQueue,
+    private val sharedPrefs: Preferences
+) : UserService {
+
     var user: User? = null
         private set
 
 
-    fun get(callBack: (user: User?) -> Unit) {
+    override suspend fun get(callBack: (user: User?) -> Unit) {
         val jsonObjectRequest = object : JsonObjectRequest(
             Method.GET,
             ENDPOINT,
@@ -32,15 +34,15 @@ class UserServiceImpl(
             @Throws(AuthFailureError::class)
             override fun getHeaders(): Map<String, String> {
                 val headers = HashMap<String, String>()
-                val token = mSharedPreferences.getString("token", "")
+                val token = sharedPrefs.getAuthToken()
                 val auth = "Bearer $token"
                 headers["Authorization"] = auth
                 return headers
             }
         }
-        mQueue.add(jsonObjectRequest)
-    }
 
+        queue.add(jsonObjectRequest)
+    }
 
     companion object {
         private const val ENDPOINT = "https://api.spotify.com/v1/me"

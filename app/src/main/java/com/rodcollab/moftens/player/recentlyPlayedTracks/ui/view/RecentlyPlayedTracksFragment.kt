@@ -1,4 +1,4 @@
-package com.rodcollab.moftens.ui.recentlyPlayedTracks
+package com.rodcollab.moftens.player.recentlyPlayedTracks.ui.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,14 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.rodcollab.moftens.R
-import com.rodcollab.moftens.data.service.song.SongServiceImpl
 import com.rodcollab.moftens.databinding.FragmentHomeBinding
-import com.rodcollab.moftens.domain.GetRecentlyPlayedTracksUseCaseImpl
+import com.rodcollab.moftens.player.recentlyPlayedTracks.ui.view.adapter.MyListAdapter
+import com.rodcollab.moftens.player.recentlyPlayedTracks.ui.view.observer.RecentlyPlayedTracksObserver
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RecentlyPlayedTracksFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -21,14 +23,11 @@ class RecentlyPlayedTracksFragment : Fragment() {
 
     private lateinit var adapter: MyListAdapter
 
-    private val viewModel: RecentlyPlayedTracksViewModel by viewModels {
-        val getSongService = SongServiceImpl(requireContext().applicationContext)
-        val getRecentlyPlayedTracksUseCase = GetRecentlyPlayedTracksUseCaseImpl(getSongService)
-        RecentlyPlayedTracksViewModel.Factory(getRecentlyPlayedTracksUseCase)
-    }
+    private lateinit var viewModel: RecentlyPlayedTracksViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[RecentlyPlayedTracksViewModel::class.java]
         lifecycle.addObserver(RecentlyPlayedTracksObserver(viewModel))
         adapter = MyListAdapter()
     }

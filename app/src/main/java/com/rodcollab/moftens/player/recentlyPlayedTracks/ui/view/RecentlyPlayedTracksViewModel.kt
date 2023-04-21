@@ -1,11 +1,14 @@
-package com.rodcollab.moftens.ui.recentlyPlayedTracks
+package com.rodcollab.moftens.player.recentlyPlayedTracks.ui.view
 
 import androidx.lifecycle.*
-import com.rodcollab.moftens.domain.GetRecentlyPlayedTracksUseCase
-import com.rodcollab.moftens.domain.SongItem
+import com.rodcollab.moftens.player.recentlyPlayedTracks.domain.usecase.GetRecentlyPlayedTracksUseCase
+import com.rodcollab.moftens.player.recentlyPlayedTracks.model.SongItem
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RecentlyPlayedTracksViewModel(
+@HiltViewModel
+class RecentlyPlayedTracksViewModel @Inject constructor(
     private val getRecentlyPlayedTracksUseCase: GetRecentlyPlayedTracksUseCase
 ) : ViewModel() {
 
@@ -27,10 +30,4 @@ class RecentlyPlayedTracksViewModel(
 
     data class UiState(val list: List<SongItem>)
 
-    @Suppress("UNCHECKED_CAST")
-        class Factory(private val getRecentlyPlayedTracksUseCase: GetRecentlyPlayedTracksUseCase) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return RecentlyPlayedTracksViewModel(getRecentlyPlayedTracksUseCase) as T
-        }
-    }
 }

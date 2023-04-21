@@ -1,6 +1,6 @@
-package com.rodcollab.moftens.data.service.song
+package com.rodcollab.moftens.core.service.song
 
-import com.rodcollab.moftens.data.model.Song
+import com.rodcollab.moftens.core.model.Song
 
 interface SongService {
 

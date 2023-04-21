@@ -1,12 +1,17 @@
-package com.rodcollab.moftens.ui.recentlyPlayedTracks
+package com.rodcollab.moftens.player.recentlyPlayedTracks.ui.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.request.ImageRequest
+import coil.transform.RoundedCornersTransformation
+import com.rodcollab.moftens.player.recentlyPlayedTracks.model.SongItem
 import com.rodcollab.moftens.databinding.ItemBinding
-import com.rodcollab.moftens.domain.SongItem
+import kotlinx.coroutines.*
 
 class MyListAdapter : RecyclerView.Adapter<MyListAdapter.SongItemViewHolder>() {
 
@@ -16,11 +21,32 @@ class MyListAdapter : RecyclerView.Adapter<MyListAdapter.SongItemViewHolder>() {
         asyncListDiffer.submitList(list)
     }
 
-    class SongItemViewHolder(private val binding: ItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class SongItemViewHolder(private val binding: ItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: SongItem) {
             binding.songName.text = item.name
             binding.artistName.text = item.artist
+            CoroutineScope(Dispatchers.Main).launch {
+                loadImgWithCoil(binding.imageView, item.url)
+            }
+
+        }
+
+        private suspend fun loadImgWithCoil(img: ImageView, data: String) {
+            withContext(Dispatchers.IO) {
+                img.load(data) {
+                    actions()
+                }
+            }
+        }
+
+        private fun ImageRequest.Builder.actions() {
+            crossfade(750)
+            transformations(
+                RoundedCornersTransformation(8F)
+            )
+            build()
         }
     }
 
@@ -47,5 +73,7 @@ class MyListAdapter : RecyclerView.Adapter<MyListAdapter.SongItemViewHolder>() {
         }
 
     }
+
+
 }
 

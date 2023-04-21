@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
 }
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
     namespace 'com.rodcollab.moftens'
@@ -16,9 +18,9 @@ android {
         versionCode 1
         versionName "1.0"
 
-
+        buildConfigField "String", "CLIENT_ID", localProperties['ClientId']
+        buildConfigField "String", "REDIRECT_URI", localProperties['RedirectUri']
         manifestPlaceholders = [redirectSchemeName: "spotify-sdk", redirectHostName: "auth"]
-
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -51,8 +53,9 @@ android {
 
 dependencies {
 
-    def hilt_version = "2.44.2"
+    implementation "io.coil-kt:coil:2.3.0"
 
+    def hilt_version = "2.44.2"
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
@@ -63,7 +66,6 @@ dependencies {
 
     implementation "com.google.code.gson:gson:2.10.1"
 
-    implementation 'com.spotify.android:auth:2.0.1'
     implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
@@ -73,7 +75,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
 
-    def fragment_version = "1.5.6"
+    def fragment_version = "1.5.7"
     
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 

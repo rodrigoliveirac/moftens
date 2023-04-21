@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".player.recentlyPlayedTracks.ui.MainActivity">
 
     <fragment
         android:id="@+id/fragment_container_view"
-        android:name="com.rodcollab.moftens.ui.recentlyPlayedTracks.RecentlyPlayedTracksFragment"
+        android:name="com.rodcollab.moftens.player.recentlyPlayedTracks.ui.view.RecentlyPlayedTracksFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
