@@ -28,9 +28,9 @@ class SongServiceImpl @Inject constructor(private val queue: RequestQueue, priva
                 Response.Listener { response: JSONObject ->
                     val gson = Gson()
                     val jsonArray = response.optJSONArray("items")
-                    for (n in 0 until jsonArray!!.length()) {
+                    for (jsonObject in 0 until jsonArray!!.length()) {
                         try {
-                            var `object` = jsonArray.getJSONObject(n)
+                            var `object` = jsonArray.getJSONObject(jsonObject)
                             `object` = `object`.optJSONObject("track")
                             val song =
                                 gson.fromJson(`object`.toString(), Song::class.java)

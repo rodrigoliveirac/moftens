@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.rodcollab.moftens.R
 import com.rodcollab.moftens.databinding.FragmentHomeBinding
-import com.rodcollab.moftens.player.recentlyPlayedTracks.ui.view.adapter.MyListAdapter
+import com.rodcollab.moftens.player.recentlyPlayedTracks.ui.view.adapter.RecentlyTracksAdapter
 import com.rodcollab.moftens.player.recentlyPlayedTracks.ui.view.observer.RecentlyPlayedTracksObserver
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +21,7 @@ class RecentlyPlayedTracksFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: MyListAdapter
+    private lateinit var adapter: RecentlyTracksAdapter
 
     private lateinit var viewModel: RecentlyPlayedTracksViewModel
 
@@ -29,7 +29,7 @@ class RecentlyPlayedTracksFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[RecentlyPlayedTracksViewModel::class.java]
         lifecycle.addObserver(RecentlyPlayedTracksObserver(viewModel))
-        adapter = MyListAdapter()
+        adapter = RecentlyTracksAdapter()
     }
 
     override fun onCreateView(
