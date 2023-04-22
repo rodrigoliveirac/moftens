@@ -3,8 +3,11 @@ package com.rodcollab.moftens.core.service.user
 import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.gson.Gson
-import com.rodcollab.moftens.core.prefs.Preferences
 import com.rodcollab.moftens.core.model.User
+import com.rodcollab.moftens.core.prefs.Preferences
+import com.rodcollab.moftens.users.topItems.model.TopItemElement
+import kotlinx.coroutines.delay
+import org.json.JSONException
 import javax.inject.Inject
 
 
@@ -15,6 +18,8 @@ class UserServiceImpl @Inject constructor(
 
     var user: User? = null
         private set
+
+    private val topItemElements = mutableListOf<TopItemElement>()
 
 
     override suspend fun get(callBack: (user: User?) -> Unit) {
@@ -42,6 +47,41 @@ class UserServiceImpl @Inject constructor(
         }
 
         queue.add(jsonObjectRequest)
+    }
+
+    override suspend fun getUserTopItems(): List<TopItemElement> {
+        val endpoint = "$ENDPOINT/top/artists?time_rage=medium_term"
+        val jsonObjectRequest: JsonObjectRequest = object : JsonObjectRequest(
+            Method.GET, endpoint, null,
+            Response.Listener { response ->
+                val gson = Gson()
+                val jsonArray = response.optJSONArray("items")
+                for(jsonObject in 0 until jsonArray!!.length()) {
+                    try {
+                        var `object` = jsonArray.getJSONObject(jsonObject)
+                        `object` = `object`.optJSONObject("name")
+                        val topItemElementName = gson.fromJson(`object`.toString(), TopItemElement::class.java)
+                        topItemElements.add(topItemElementName)
+                    } catch(e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            },
+            Response.ErrorListener {}) {
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers: MutableMap<String, String> = HashMap()
+                val token = sharedPrefs.getAuthToken()
+                val auth = "Bearer $token"
+                headers["Authorization"] = auth
+                return headers
+            }
+        }
+        queue.add(jsonObjectRequest)
+        while (topItemElements.isEmpty()) {
+            delay(100)
+        }
+        return topItemElements
     }
 
     companion object {
