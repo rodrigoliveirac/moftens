@@ -1,6 +1,6 @@
 package com.rodcollab.moftens.users.topItems.model
 
-data class TopItemElement(
+data class TopItemObject(
     val name: String,
-    val imgUrl: String,
+    val images: List<ImageArtist>
 )

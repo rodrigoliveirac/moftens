@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rodcollab.moftens.databinding.FragmentTopItemsBinding
-import com.rodcollab.moftens.users.topItems.model.TopItemElement
 import com.rodcollab.moftens.users.topItems.ui.adapter.TopItemsAdapter
+import com.rodcollab.moftens.users.topItems.viewmodel.TopItemsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TopItemsFragment : Fragment() {
 
     private var _binding: FragmentTopItemsBinding? = null
@@ -17,8 +20,12 @@ class TopItemsFragment : Fragment() {
 
     private lateinit var adapter: TopItemsAdapter
 
+    private lateinit var viewModel: TopItemsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[TopItemsViewModel::class.java]
+        lifecycle.addObserver(TopItemsObserver(viewModel))
         adapter = TopItemsAdapter()
     }
 
@@ -37,14 +44,12 @@ class TopItemsFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        adapter.submitList(
-            listOf(
-                TopItemElement(
-                    id = "id",
-                    artistName = "Rodrigo"
-                )
-            )
-        )
+        viewModel.streamAndOnce().observe(viewLifecycleOwner) { uiState ->
+            bindUiState(uiState)
+        }
+    }
 
+    private fun bindUiState(uiState: TopItemsViewModel.UiState) {
+        adapter.submitList(uiState.list)
     }
 }

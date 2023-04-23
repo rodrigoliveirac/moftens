@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.rodcollab.moftens.core.model.User
 import com.rodcollab.moftens.core.prefs.Preferences
 import com.rodcollab.moftens.users.topItems.model.TopItemElement
+import com.rodcollab.moftens.users.topItems.model.TopItemObject
 import kotlinx.coroutines.delay
 import org.json.JSONException
 import javax.inject.Inject
@@ -50,19 +51,22 @@ class UserServiceImpl @Inject constructor(
     }
 
     override suspend fun getUserTopItems(): List<TopItemElement> {
-        val endpoint = "$ENDPOINT/top/artists?time_rage=medium_term"
+        val endpoint = "$ENDPOINT/top/artists?time_range=medium_term"
         val jsonObjectRequest: JsonObjectRequest = object : JsonObjectRequest(
             Method.GET, endpoint, null,
             Response.Listener { response ->
                 val gson = Gson()
                 val jsonArray = response.optJSONArray("items")
-                for(jsonObject in 0 until jsonArray!!.length()) {
+                for (jsonObject in 0 until jsonArray!!.length()) {
                     try {
-                        var `object` = jsonArray.getJSONObject(jsonObject)
-                        `object` = `object`.optJSONObject("name")
-                        val topItemElementName = gson.fromJson(`object`.toString(), TopItemElement::class.java)
-                        topItemElements.add(topItemElementName)
-                    } catch(e: JSONException) {
+                        val `object` = jsonArray.getJSONObject(jsonObject).toString()
+                        val topItemObject = gson.fromJson(`object`, TopItemObject::class.java)
+                        val topItem = TopItemElement(
+                            name = topItemObject.name,
+                            imgUrl = topItemObject.images[0].url
+                        )
+                        topItemElements.add(topItem)
+                    } catch (e: JSONException) {
                         e.printStackTrace()
                     }
                 }
