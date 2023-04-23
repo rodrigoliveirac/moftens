@@ -13,7 +13,7 @@ import com.rodcollab.moftens.player.recentlyPlayedTracks.model.SongItem
 import com.rodcollab.moftens.databinding.ItemBinding
 import kotlinx.coroutines.*
 
-class MyListAdapter : RecyclerView.Adapter<MyListAdapter.SongItemViewHolder>() {
+class RecentlyTracksAdapter : RecyclerView.Adapter<RecentlyTracksAdapter.SongItemViewHolder>() {
 
     private val asyncListDiffer: AsyncListDiffer<SongItem> = AsyncListDiffer(this, DiffCallback)
 
