@@ -1,7 +1,7 @@
-package com.rodcollab.moftens.users.topItems.domain.di
+package com.rodcollab.moftens.users.topItems.artist.domain.di
 
-import com.rodcollab.moftens.users.topItems.domain.usecase.GetTopItemsArtistUseCase
-import com.rodcollab.moftens.users.topItems.domain.usecase.GetTopItemsArtistUseCaseImpl
+import com.rodcollab.moftens.users.topItems.artist.domain.usecase.GetTopItemsArtistUseCase
+import com.rodcollab.moftens.users.topItems.artist.domain.usecase.GetTopItemsArtistUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

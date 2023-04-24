@@ -1,4 +1,4 @@
-package com.rodcollab.moftens.users.topItems.ui.adapter
+package com.rodcollab.moftens.users.topItems.artist.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ import coil.load
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import com.rodcollab.moftens.databinding.ItemBinding
-import com.rodcollab.moftens.users.topItems.model.TopItemArtistElement
+import com.rodcollab.moftens.users.topItems.artist.model.TopItemArtistElement
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

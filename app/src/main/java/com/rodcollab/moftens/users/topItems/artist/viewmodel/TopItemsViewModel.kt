@@ -1,11 +1,11 @@
-package com.rodcollab.moftens.users.topItems.viewmodel
+package com.rodcollab.moftens.users.topItems.artist.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rodcollab.moftens.users.topItems.domain.usecase.GetTopItemsArtistUseCase
-import com.rodcollab.moftens.users.topItems.model.TopItemArtistElement
+import com.rodcollab.moftens.users.topItems.artist.domain.usecase.GetTopItemsArtistUseCase
+import com.rodcollab.moftens.users.topItems.artist.model.TopItemArtistElement
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

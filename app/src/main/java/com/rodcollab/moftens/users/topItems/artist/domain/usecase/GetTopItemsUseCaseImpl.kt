@@ -1,7 +1,7 @@
-package com.rodcollab.moftens.users.topItems.domain.usecase
+package com.rodcollab.moftens.users.topItems.artist.domain.usecase
 
 import com.rodcollab.moftens.core.service.user.UserService
-import com.rodcollab.moftens.users.topItems.model.TopItemArtistElement
+import com.rodcollab.moftens.users.topItems.artist.model.TopItemArtistElement
 import javax.inject.Inject
 
 class GetTopItemsArtistUseCaseImpl @Inject constructor(

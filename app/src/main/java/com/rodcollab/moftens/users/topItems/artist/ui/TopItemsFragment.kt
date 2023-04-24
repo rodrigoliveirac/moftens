@@ -1,4 +1,4 @@
-package com.rodcollab.moftens.users.topItems.ui
+package com.rodcollab.moftens.users.topItems.artist.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rodcollab.moftens.databinding.FragmentTopItemsBinding
-import com.rodcollab.moftens.users.topItems.ui.adapter.TopItemsAdapter
-import com.rodcollab.moftens.users.topItems.viewmodel.TopItemsViewModel
+import com.rodcollab.moftens.users.topItems.artist.ui.adapter.TopItemsAdapter
+import com.rodcollab.moftens.users.topItems.artist.viewmodel.TopItemsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.rodcollab.moftens.users.topItems.model
+package com.rodcollab.moftens.users.topItems.artist.model
 
 data class TopItemArtistElement(
     val name: String,
