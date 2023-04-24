@@ -1,4 +1,4 @@
-package com.rodcollab.moftens.users.topItems.artist.viewmodel
+package com.rodcollab.moftens.users.topItems.artist.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

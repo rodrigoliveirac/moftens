@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rodcollab.moftens.databinding.FragmentTopItemsBinding
 import com.rodcollab.moftens.users.topItems.artist.ui.adapter.TopItemsAdapter
-import com.rodcollab.moftens.users.topItems.artist.viewmodel.TopItemsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
