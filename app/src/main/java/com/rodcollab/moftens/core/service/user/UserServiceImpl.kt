@@ -3,6 +3,7 @@ package com.rodcollab.moftens.core.service.user
 import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.gson.Gson
+import com.rodcollab.moftens.core.model.TopItemTrackObject
 import com.rodcollab.moftens.core.model.User
 import com.rodcollab.moftens.core.prefs.Preferences
 import com.rodcollab.moftens.users.topItems.model.TopItemArtistElement
@@ -20,7 +21,8 @@ class UserServiceImpl @Inject constructor(
     var user: User? = null
         private set
 
-    private val topItemElements = mutableListOf<TopItemArtistElement>()
+    private val topItemsArtistElements = mutableListOf<TopItemArtistElement>()
+    private val topItemsTrackObject = mutableListOf<TopItemTrackObject>()
 
 
     override suspend fun get(callBack: (user: User?) -> Unit) {
@@ -65,7 +67,7 @@ class UserServiceImpl @Inject constructor(
                             name = topItemObject.name,
                             imgUrl = topItemObject.images[0].url
                         )
-                        topItemElements.add(topItem)
+                        topItemsArtistElements.add(topItem)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
@@ -82,10 +84,44 @@ class UserServiceImpl @Inject constructor(
             }
         }
         queue.add(jsonObjectRequest)
-        while (topItemElements.isEmpty()) {
+        while (topItemsArtistElements.isEmpty()) {
             delay(100)
         }
-        return topItemElements
+        return topItemsArtistElements
+    }
+
+    override suspend fun getUserTopItemsTrack(): List<TopItemTrackObject> {
+        val endpoint = "$ENDPOINT/top/tracks?time_range=medium_term"
+        val jsonObjectRequest: JsonObjectRequest = object : JsonObjectRequest(
+            Method.GET, endpoint, null,
+            Response.Listener { response ->
+                val gson = Gson()
+                val jsonArray = response.optJSONArray("items")
+                for (jsonObject in 0 until jsonArray!!.length()) {
+                    try {
+                        val `object` = jsonArray.getJSONObject(jsonObject).toString()
+                        val topItemTrackObject = gson.fromJson(`object`, TopItemTrackObject::class.java)
+                        topItemsTrackObject.add(topItemTrackObject)
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            },
+            Response.ErrorListener {}) {
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers: MutableMap<String, String> = HashMap()
+                val token = sharedPrefs.getAuthToken()
+                val auth = "Bearer $token"
+                headers["Authorization"] = auth
+                return headers
+            }
+        }
+        queue.add(jsonObjectRequest)
+        while (topItemsTrackObject.isEmpty()) {
+            delay(100)
+        }
+        return topItemsTrackObject
     }
 
     companion object {
