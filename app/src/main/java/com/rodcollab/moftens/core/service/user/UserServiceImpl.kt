@@ -6,7 +6,7 @@ import com.google.gson.Gson
 import com.rodcollab.moftens.core.model.User
 import com.rodcollab.moftens.core.prefs.Preferences
 import com.rodcollab.moftens.users.topItems.model.TopItemArtistElement
-import com.rodcollab.moftens.users.topItems.model.TopItemObject
+import com.rodcollab.moftens.users.topItems.model.TopItemArtistObject
 import kotlinx.coroutines.delay
 import org.json.JSONException
 import javax.inject.Inject
@@ -60,7 +60,7 @@ class UserServiceImpl @Inject constructor(
                 for (jsonObject in 0 until jsonArray!!.length()) {
                     try {
                         val `object` = jsonArray.getJSONObject(jsonObject).toString()
-                        val topItemObject = gson.fromJson(`object`, TopItemObject::class.java)
+                        val topItemObject = gson.fromJson(`object`, TopItemArtistObject::class.java)
                         val topItem = TopItemArtistElement(
                             name = topItemObject.name,
                             imgUrl = topItemObject.images[0].url
