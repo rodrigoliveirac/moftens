@@ -1,7 +1,7 @@
 package com.rodcollab.moftens.users.topItems.domain.di
 
-import com.rodcollab.moftens.users.topItems.domain.usecase.GetTopItemsUseCase
-import com.rodcollab.moftens.users.topItems.domain.usecase.GetTopItemsUseCaseImpl
+import com.rodcollab.moftens.users.topItems.domain.usecase.GetTopItemsArtistUseCase
+import com.rodcollab.moftens.users.topItems.domain.usecase.GetTopItemsArtistUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,5 +14,5 @@ abstract class CollectionsModule {
 
     @Singleton
     @Binds
-    abstract fun providesGetUserTopItems(impl: GetTopItemsUseCaseImpl) : GetTopItemsUseCase
+    abstract fun providesGetUserTopItems(impl: GetTopItemsArtistUseCaseImpl) : GetTopItemsArtistUseCase
 }

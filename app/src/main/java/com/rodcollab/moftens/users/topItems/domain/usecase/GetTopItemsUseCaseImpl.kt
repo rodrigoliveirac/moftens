@@ -1,17 +1,17 @@
 package com.rodcollab.moftens.users.topItems.domain.usecase
 
 import com.rodcollab.moftens.core.service.user.UserService
-import com.rodcollab.moftens.users.topItems.model.TopItemElement
+import com.rodcollab.moftens.users.topItems.model.TopItemArtistElement
 import javax.inject.Inject
 
-class GetTopItemsUseCaseImpl @Inject constructor(
+class GetTopItemsArtistUseCaseImpl @Inject constructor(
     private val service: UserService
-) : GetTopItemsUseCase {
+) : GetTopItemsArtistUseCase {
 
-    override suspend fun invoke(): List<TopItemElement> {
-        return service.getUserTopItems().map { item ->
+    override suspend fun invoke(): List<TopItemArtistElement> {
+        return service.getUserTopItemsArtist().map { item ->
 
-            TopItemElement(
+            TopItemArtistElement(
                 name = item.name,
                 imgUrl = item.imgUrl
             )

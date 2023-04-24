@@ -11,7 +11,7 @@ import coil.load
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import com.rodcollab.moftens.databinding.ItemBinding
-import com.rodcollab.moftens.users.topItems.model.TopItemElement
+import com.rodcollab.moftens.users.topItems.model.TopItemArtistElement
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ class TopItemsAdapter :
     private val asyncListDiffer = AsyncListDiffer(this, DiffCallback)
 
     class TopItemViewHolder(private val binding: ItemBinding) : ViewHolder(binding.root) {
-        fun bind(topItem: TopItemElement) {
+        fun bind(topItem: TopItemArtistElement) {
             binding.artistName.text = topItem.name
             CoroutineScope(Dispatchers.Main).launch {
                 loadImgWithCoil(binding.imageView, topItem.imgUrl)
@@ -48,7 +48,7 @@ class TopItemsAdapter :
         }
     }
 
-    fun submitList(list: List<TopItemElement>) {
+    fun submitList(list: List<TopItemArtistElement>) {
         asyncListDiffer.submitList(list)
     }
 
@@ -66,12 +66,12 @@ class TopItemsAdapter :
         return asyncListDiffer.currentList.size
     }
 
-    object DiffCallback : DiffUtil.ItemCallback<TopItemElement>() {
-        override fun areItemsTheSame(oldItem: TopItemElement, newItem: TopItemElement): Boolean {
+    object DiffCallback : DiffUtil.ItemCallback<TopItemArtistElement>() {
+        override fun areItemsTheSame(oldItem: TopItemArtistElement, newItem: TopItemArtistElement): Boolean {
             return oldItem.name == newItem.name
         }
 
-        override fun areContentsTheSame(oldItem: TopItemElement, newItem: TopItemElement): Boolean {
+        override fun areContentsTheSame(oldItem: TopItemArtistElement, newItem: TopItemArtistElement): Boolean {
             return oldItem == newItem
         }
     }

@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rodcollab.moftens.users.topItems.domain.usecase.GetTopItemsUseCase
-import com.rodcollab.moftens.users.topItems.model.TopItemElement
+import com.rodcollab.moftens.users.topItems.domain.usecase.GetTopItemsArtistUseCase
+import com.rodcollab.moftens.users.topItems.model.TopItemArtistElement
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TopItemsViewModel @Inject constructor(private val getTopItemsUseCase: GetTopItemsUseCase) : ViewModel() {
+class TopItemsViewModel @Inject constructor(private val getTopItemsUseCase: GetTopItemsArtistUseCase) : ViewModel() {
 
     private val uiState: MutableLiveData<UiState> by lazy {
         MutableLiveData(UiState(list = emptyList()))
@@ -28,5 +28,5 @@ class TopItemsViewModel @Inject constructor(private val getTopItemsUseCase: GetT
     }
 
 
-    data class UiState(val list: List<TopItemElement>)
+    data class UiState(val list: List<TopItemArtistElement>)
 }
