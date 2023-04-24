@@ -6,5 +6,6 @@ data class TopItemTrackObject(
     val trackId: String,
     val artists: List<Artist>,
     val name: String,
-    val album: Album
+    val album: Album,
+    val artistId: String
 )

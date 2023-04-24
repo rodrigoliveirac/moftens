@@ -6,8 +6,8 @@ import com.google.gson.Gson
 import com.rodcollab.moftens.core.model.TopItemTrackObject
 import com.rodcollab.moftens.core.model.User
 import com.rodcollab.moftens.core.prefs.Preferences
-import com.rodcollab.moftens.users.topItems.model.TopItemArtistElement
-import com.rodcollab.moftens.users.topItems.model.TopItemArtistObject
+import com.rodcollab.moftens.users.topItems.artist.model.TopItemArtistElement
+import com.rodcollab.moftens.users.topItems.artist.model.TopItemArtistObject
 import kotlinx.coroutines.delay
 import org.json.JSONException
 import javax.inject.Inject
@@ -22,7 +22,7 @@ class UserServiceImpl @Inject constructor(
         private set
 
     private val topItemsArtistElements = mutableListOf<TopItemArtistElement>()
-    private val topItemsTrackObject = mutableListOf<TopItemTrackObject>()
+    private val topItemsTrackElements = mutableListOf<TopItemTrackElement>()
 
 
     override suspend fun get(callBack: (user: User?) -> Unit) {
@@ -90,7 +90,7 @@ class UserServiceImpl @Inject constructor(
         return topItemsArtistElements
     }
 
-    override suspend fun getUserTopItemsTrack(): List<TopItemTrackObject> {
+    override suspend fun getUserTopItemsTrack(): List<TopItemTrackElement> {
         val endpoint = "$ENDPOINT/top/tracks?time_range=medium_term"
         val jsonObjectRequest: JsonObjectRequest = object : JsonObjectRequest(
             Method.GET, endpoint, null,
@@ -101,7 +101,16 @@ class UserServiceImpl @Inject constructor(
                     try {
                         val `object` = jsonArray.getJSONObject(jsonObject).toString()
                         val topItemTrackObject = gson.fromJson(`object`, TopItemTrackObject::class.java)
-                        topItemsTrackObject.add(topItemTrackObject)
+                        lateinit var topItemTrackElement: TopItemTrackElement
+                        topItemTrackObject.artists.map {
+                             topItemTrackElement =  TopItemTrackElement(
+                                artistId = it.id,
+                                name = topItemTrackObject.name,
+                                imgUrl = topItemTrackObject.album.images[0].url
+                            )
+                        }
+
+                        topItemsTrackElements.add(topItemTrackElement)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
@@ -118,10 +127,10 @@ class UserServiceImpl @Inject constructor(
             }
         }
         queue.add(jsonObjectRequest)
-        while (topItemsTrackObject.isEmpty()) {
+        while (topItemsTrackElements.isEmpty()) {
             delay(100)
         }
-        return topItemsTrackObject
+        return topItemsTrackElements
     }
 
     companion object {
