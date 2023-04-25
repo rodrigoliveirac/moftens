@@ -1,7 +1,7 @@
 package com.rodcollab.moftens.users.topItems.track.domain.di
 
-import com.rodcollab.moftens.users.topItems.track.domain.GetTopItemsTrackUseCase
-import com.rodcollab.moftens.users.topItems.track.domain.GetTopItemsTrackUseCaseImpl
+import com.rodcollab.moftens.users.topItems.track.domain.usecase.GetTopItemsTrackUseCase
+import com.rodcollab.moftens.users.topItems.track.domain.usecase.GetTopItemsTrackUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

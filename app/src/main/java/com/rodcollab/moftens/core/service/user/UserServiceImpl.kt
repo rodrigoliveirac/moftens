@@ -53,7 +53,10 @@ class UserServiceImpl @Inject constructor(
     }
 
     override suspend fun getUserTopItemsArtist(): List<TopItemArtistElement> {
-        val endpoint = "$ENDPOINT/top/artists?time_range=medium_term"
+        if(topItemsArtistElements.size > 0) {
+            topItemsArtistElements.clear()
+        }
+        val endpoint = "$ENDPOINT/top/artists?time_range=${sharedPrefs.getTimeRange()}"
         val jsonObjectRequest: JsonObjectRequest = object : JsonObjectRequest(
             Method.GET, endpoint, null,
             Response.Listener { response ->
